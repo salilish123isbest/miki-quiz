@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikiyas's Online Quiz</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 400px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .option.correct {
+            background: #28a745;
+            color: white;
+        }
+        .option.wrong {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="quizContainer">
+        <h1>Mikiyas's Online Quiz</h1>
+        <button id="startBtn">Start Quiz</button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Paris", "Madrid", "Rome"],
+                answer: "Paris"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Earth", "Mars", "Jupiter", "Venus"],
+                answer: "Mars"
+            },
+            {
+                question: "What is 5 + 7?",
+                options: ["10", "12", "13", "14"],
+                answer: "12"
+            },
+            {
+                question: "Which ocean is the largest?",
+                options: ["Atlantic", "Indian", "Pacific", "Arctic"],
+                answer: "Pacific"
+            },
+            {
+                question: "Who wrote 'Romeo and Juliet'?",
+                options: ["William Shakespeare", "Leo Tolstoy", "Mark Twain", "Charles Dickens"],
+                answer: "William Shakespeare"
+            }
+        ];
+
+        const quizContainer = document.getElementById('quizContainer');
+        const startBtn = document.getElementById('startBtn');
+        let currentQuestion = 0;
+        let score = 0;
+
+        startBtn.addEventListener('click', startQuiz);
+
+        function startQuiz() {
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionData = quizData[currentQuestion];
+            quizContainer.innerHTML = `<h2>${questionData.question}</h2>`;
+
+            questionData.options.forEach(option => {
+                const btn = document.createElement('div');
+                btn.classList.add('option');
+                btn.innerText = option;
+                btn.addEventListener('click', () => selectOption(btn, questionData.answer));
+                quizContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedBtn, correctAnswer) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.innerText === correctAnswer) {
+                    btn.classList.add('correct');
+                } else if (btn === selectedBtn) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selectedBtn.innerText === correctAnswer) {
+                score++;
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            }, 1000);
+        }
+
+        function showScore() {
+            quizContainer.innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>Your Score: ${score} / ${quizData.length}</p>
+                <p>Made by Mikiyas</p>
+                <button onclick=\"location.reload()\">Restart Quiz</button>
+            `;
+        }
+    </script>
+</body>
+</html>
